@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        async function FetchCall() {
+            var Response = await fetch("https://fakestoreapi.com/products/");
+            var Data = await Response.json();
+            await Promise.resolve(setProducts(Data));
+        }
+        FetchCall();
+    });
+
+    var productsJSX = products.map(({ id, image, title, price }, index) => {
+        return (
+            <div className="item" key={id}>
+                <img src={image} alt="" />
+                <div className="details">
+                    <h4 className="name">{title}</h4>
+                    <p className="price">${price}</p>
+                </div>
+                <div className="button">&#43;</div>
+            </div>
+        );
+    });
+    return (
+        <div className="container">
+            <div className="header">
+                <h2>Product List</h2>
+            </div>
+            <div className="wrapper">
+                <div className="inner-wrapper">{productsJSX}</div>
+            </div>
+        </div>
+    );
 }
 
 export default App;
